@@ -6,20 +6,11 @@
  * descript: The main function
  */
 
-/* #include "packet.h" */
-/* #include "sender.h" */
-/* #include "server.h" */
-/* #include "network.h" */
-
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-
-
-#include "main.h"
+#include "packet.h"
+#include "sender.h"
+#include "server.h"
+#include "network.h"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,29 +34,36 @@ main(int argc, char **argv){
   TTL = atoi(argv[2]);
   strcpy(Dir, argv[3]);
 
+
   // read in neighbor config file
-  FILE *fp;
-  char neighbor_ip[16];
-  int neighbor_port;
-  if ( (fp = fopen(CONFIG_FILE, "r")) == NULL ){
-    ERROR("Cannot open config file");
-  }
-  while ( fscanf(fp, "%s%d\n", neighbor_ip, &neighbor_port) != EOF ){
+  int neighbor_num;
+  neighor_t *neighbors;
 
-    printf ("neighbor: %s : %d\n", neighbor_ip, neighbor_port);
+  neighbor_num = read_neighbor_config(CONFIG_FILE, neighbors);
 
-  }
 
   // create server config arg
+  IDlist_t *IDlist = init_IDlist();
+  server_arg_t server_arg;
+  char *filenames[MAX_STRLEN];
+
+  // read in dir files
+  if ( read_dir(Dir, filenames) == -1 ){
+    ERROR("Error reading in target DIR\n");
+  }
+  // push values to server args
+  server_arg.IDlist = IDlist;
+  server_arg.portno = portno;
+  server_arg.filenames = filenames;
+
   
-
-
   // spawn threads to handle server work 
-  if ( pthread_create(&thread, NULL, recv_worker, (void *)args) < 0 ){
+  if ( pthread_create(&thread, NULL, server_worker, (void *)args) < 0 ){
     ERROR("Error creating receiver thread\n");
   }
 
-  // main while loop: sender work 
+
+  // main thread while loop: sender work 
   while (1){
     // TODO: read input
 

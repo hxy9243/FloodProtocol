@@ -11,12 +11,15 @@
 #define __ADT_H__
 
 
+#include "config.h"
+
+
 /*
  * Sender packet format
  */
-typedef packet {
+typedef struct packet {
   /* ID to avoid handling same packet twice */
-  unsigned short ID; 
+  unsigned int ID; 
   
   /* Descriptor: what type of packet */
   unsigned char Descript;
@@ -33,8 +36,45 @@ typedef packet {
 } packet_t;
 
 
-/* generate a random ID for each payload */
+/*
+ * ID list - a list for query ID history
+ */
+typedef struct IDlist {
+  /* an array for all IDs */
+  unsigned int *IDs;
+
+  /* num of all IDs */
+  int num;
+} IDlist_t;
+
+
+/*
+ * Query packet related functions
+ */
+// generate a random ID for each payload 
 unsigned short gen_ID();
+
+
+
+/* 
+ * ID list related functions
+ */
+// init IDlist
+IDlist_t *init_IDlist();
+
+// Add to ID list
+void add_to_IDlist(IDlist_t *IDlist, int ID); 
+
+// free IDlist
+void free_IDlist(IDlist_t *IDlist);
+
+
+/*
+ * Helper functions
+ */
+// read directories
+int read_dir(char *Dir, char *filename[MAX_STRLEN]);
+
 
 
 #endif

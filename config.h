@@ -15,6 +15,8 @@
 
 #define CONFIG_FILE "config"
 
+#define MAX_STRLEN 32
+
 
 #endif
 
