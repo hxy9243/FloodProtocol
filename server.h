@@ -26,6 +26,9 @@ typedef struct server_arg {
   // server port number
   int portno;
 
+  // Dir to read
+  char *Dir;
+
 } server_arg_t;
 
 

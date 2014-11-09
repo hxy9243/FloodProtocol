@@ -47,14 +47,10 @@ main(int argc, char **argv){
   server_arg_t server_arg;
   char *filenames[MAX_STRLEN];
 
-  // read in dir files
-  if ( read_dir(Dir, filenames) == -1 ){
-    ERROR("Error reading in target DIR\n");
-  }
   // push values to server args
   server_arg.IDlist = IDlist;
   server_arg.portno = portno;
-  server_arg.filenames = filenames;
+  server_arg.Dir = Dir;
 
   
   // spawn threads to handle server work 
