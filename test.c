@@ -8,6 +8,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char **argv){
 
@@ -15,9 +16,13 @@ int main(int argc, char **argv){
   char *filename[MAX_STRLEN];
 
 
-  read_dir(Dir, filename);
+  while(1){
+    char input[32];
+    scanf("%s", input);
 
+    printf ("strlen is %d\n", (int) strlen(input));
 
-
+    puts(input);
+  }
   return 0;
 }

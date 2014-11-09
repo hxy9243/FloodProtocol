@@ -32,7 +32,7 @@ void server_worker(void *arg){
     
     // compare ID
 
-    // scan folder
+    // scan and find in folder
 
     // prepare packet
 
@@ -49,25 +49,27 @@ void server_worker(void *arg){
 
 // read directories
 // param: Dir - the dir to scan
-//        filenames - the pointer to array of filenames 
-// return: the num of files, -1 when any error
-int read_dir(char *Dir, char *filenames[MAX_STRLEN]){
+//        filename - the filename to find
+// return: 1 if hit, 0 if not, -1 if error
+int find_in_dir(char *Dir, char *filename){
   DIR *dp;
   struct dirent *dirstruct;
-  int num_files = 0;
 
   if ( (dp = opendir(Dir)) == NULL ){
     return -1;
   }
 
+  // loop in dir, search for the filename
   while ( (dirstruct = readdir(dp)) != NULL ){
-    printf ("%s\n", dirstruct->d_name);
 
-    ++ num_files;
+    if ( strcmp(filenames, dirstruct->d_name) == 0 ){
+      return 1;
+    }
+
   }
 
   closedir(dp);
 
-  return num_files;
+  return 0;
 }
 

@@ -13,6 +13,10 @@
 
 #include "config.h"
 
+// define packet type
+#define QUERY 0
+#define RESPON 1
+
 
 /*
  * Sender packet format
@@ -27,11 +31,11 @@ typedef struct packet {
   /* Time To Live */
   unsigned char TTL;
   
-  /* Sender Host IP */
-  int IP;
+  /* Query or responder hostname */
+  char hostname[MAX_STRLEN];
 
-  /* Query data */
-  char QueryData[32];
+  /* payload, the name of the search string */
+  char payload_data[MAX_STRLEN];
 
 } packet_t;
 
@@ -60,10 +64,13 @@ unsigned short gen_ID();
  * ID list related functions
  */
 // init IDlist
-IDlist_t *init_IDlist();
+int init_IDlist(IDlist_t *IDlist);
 
 // Add to ID list
 void add_to_IDlist(IDlist_t *IDlist, int ID); 
+
+// search in ID list
+int search_in_IDlist(IDlist_t *IDlist, int ID);
 
 // free IDlist
 void free_IDlist(IDlist_t *IDlist);
@@ -72,8 +79,6 @@ void free_IDlist(IDlist_t *IDlist);
 /*
  * Helper functions
  */
-// read directories
-int read_dir(char *Dir, char *filename[MAX_STRLEN]);
 
 
 

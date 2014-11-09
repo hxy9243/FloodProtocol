@@ -43,9 +43,11 @@ main(int argc, char **argv){
 
 
   // create server config arg
-  IDlist_t *IDlist = init_IDlist();
+  IDlist_t *IDlist;
   server_arg_t server_arg;
   char *filenames[MAX_STRLEN];
+
+  init_IDlist(IDlist);
 
   // push values to server args
   server_arg.IDlist = IDlist;
@@ -59,15 +61,37 @@ main(int argc, char **argv){
   }
 
 
+  // param init for sender
+  // TODO: init something else
+  init_network();
+
   // main thread while loop: sender work 
   while (1){
+
+    char input[MAX_STRLEN];
+
     // TODO: read input
+    printf ("Search in network: ");
 
+    fgets(input, MAX_STRLEN, stdin);
+    // strip trailing \n
+    int len = strlen(input);
+    if (input != NULL && input[len - 1] == '\n'){
+      input[len - 1] = '\0';
+    }
 
-    // generate packet
-  
-  
+    // generate packet and add new ID to list
+    packet_t *packet;
+    int packetID;
+
+    packetID = gen_packt(packet,
+                         filename,
+                         QUERY,
+                         TTL);
+    add_to_IDlist(IDlist, packetID);
+    
     // send request in UDP
+    send_request(packet, sizeof(packet_t));
 
   }
 

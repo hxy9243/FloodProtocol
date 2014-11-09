@@ -36,8 +36,8 @@ typedef struct server_arg {
 void server_work(void *arg);
 
 
-// read directories
-int read_dir(char *Dir, char *filename[MAX_STRLEN]);
+// find in directories
+int find_in_dir(char *Dir, char *filename);
 
 
 
