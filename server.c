@@ -19,30 +19,72 @@
 // server worker thread function
 // param: arg - argument
 void server_worker(void *arg){
-
   // init params
+  server_arg *_arg = (server_arg *)arg;
+
+  IDlist_t *IDlist = _arg->IDlist;
+  int portno = _arg->portno;
+  char *Dir = _arg->Dir;
+
+  // init socket
+  int sockfd = init_socket(portno);
 
   // main while loop
   while (1){
 
+    packet_t *packet;
+
     // accept new packets
-
+    sock_recvfrom(sockfd, (void *)packet);
     
-    // if request
-    
-    // compare ID
+    // if query request
+    if (packet->Descript == QUERY){
+      // compare ID, ignore if repetitive query
+      if (find_in_IDlist(IDlist, packet->ID) == 1){
+        continue;
+      }
 
-    // scan and find in folder
+      // if found in folder, then return the msg back to query host
+      if ( find_in_dir(Dir, packet->filename) == 1){
+        // shoot the response to initiator of query
+        packet_t *respon_packet;
 
-    // prepare packet
+        gen_packet(respon_packet, 
+                   packet->filename, 
+                   RESPON,
+                   0);
 
+        sock_sendto(packet->hostname, packet);
+      }
+      // not found, flood to neighbors
+      else {
+        // prepare packet
+        if (update_packet(packet) <= 0){
+          continue;
+        }
 
-    // if response
-    
-    // print out to terminal
+        // read neighbor config
+        read_neighbor_config(CONFIG_FILE, neighbors);
+        
+        // update neighbors
+        
+        
 
+        // shoot the packet
+                
+        
+      }
+    } // if query packet
 
-  }
+      // else if response
+    else if (packet->Descript == RESPON){
+        
+
+    }
+
+    free(packet);
+
+  } // while loop
 
 }
 

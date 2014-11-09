@@ -53,11 +53,30 @@ typedef struct IDlist {
 
 
 /*
+ * Neighbor address
+ */
+typedef struct neighbor_addr {
+  char hostname[32];
+  int portno;
+} neighbor_t;
+
+typedef struct neighbors {
+  neighbor_t *neighbors;
+  int num_neighbors;
+} neighbors_t;
+
+
+/*
  * Query packet related functions
  */
 // generate a random ID for each payload 
-unsigned short gen_ID();
+int gen_ID();
 
+// generate sending packet according to params, returns ID
+int gen_packet(packet_t *packet, char *filename, int type, int TTL);
+
+// update packet, return TTL
+int update_packet(packet_t *packet);
 
 
 /* 
@@ -69,16 +88,20 @@ int init_IDlist(IDlist_t *IDlist);
 // Add to ID list
 void add_to_IDlist(IDlist_t *IDlist, int ID); 
 
-// search in ID list
-int search_in_IDlist(IDlist_t *IDlist, int ID);
+// find in ID list
+int find_in_IDlist(IDlist_t *IDlist, int ID);
 
 // free IDlist
 void free_IDlist(IDlist_t *IDlist);
 
 
 /*
- * Helper functions
+ * Neighbor related functions
  */
+
+// read in neighbor config
+int read_neighbor_config(char *filename, neighbors_t *neighbors);
+
 
 
 
