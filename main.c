@@ -22,25 +22,29 @@
 int 
 main(int argc, char **argv){
 
-  // read in port_no, TTL, DIR
+  // read in port_no, TTL, DIR, neighbors
   int portno;
   int TTL;
   char Dir[128];
+  neighbors_t neighbors;
 
-  if (argc != 4){
-    ERROR("Usage: query_flood [PORTNO] [TTL] [DIR]");
+  if (argc < 4){
+    ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]");
   }
+  if (argc > 4){
+    int i;
+    for (i = 4; i < argc; ++ i){
+      // save neighbors to data structure
+      push_neighbor(neighbors, argv[i]);
+    }
+  }
+
   portno = atoi(argv[1]);
   TTL = atoi(argv[2]);
   strcpy(Dir, argv[3]);
 
-
-  // read in neighbor config file
-  int neighbor_num;
-  neighor_t *neighbors;
-
-  neighbor_num = read_neighbor_config(CONFIG_FILE, neighbors);
-
+  // contact neighbors and establish connection
+  connect_neighbors(neighbors);
 
   // create server config arg
   IDlist_t *IDlist;
@@ -54,16 +58,10 @@ main(int argc, char **argv){
   server_arg.portno = portno;
   server_arg.Dir = Dir;
 
-  
   // spawn threads to handle server work 
   if ( pthread_create(&thread, NULL, server_worker, (void *)args) < 0 ){
     ERROR("Error creating receiver thread\n");
   }
-
-
-  // param init for sender
-  // TODO: init something else
-  init_network();
 
   // main thread while loop: sender work 
   while (1){
@@ -74,7 +72,7 @@ main(int argc, char **argv){
     printf ("Search in network: ");
 
     fgets(input, MAX_STRLEN, stdin);
-    // strip trailing \n
+    // strip trailing '\n'
     int len = strlen(input);
     if (input != NULL && input[len - 1] == '\n'){
       input[len - 1] = '\0';
@@ -90,8 +88,8 @@ main(int argc, char **argv){
                          TTL);
     add_to_IDlist(IDlist, packetID);
     
-    // send request in UDP
-    send_request(packet, sizeof(packet_t));
+    // send request in UDP to all neighbors
+    send_request(neighbors, packet, sizeof(packet_t));
 
   }
 

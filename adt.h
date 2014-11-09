@@ -22,19 +22,19 @@
  * Sender packet format
  */
 typedef struct packet {
-  /* ID to avoid handling same packet twice */
+  // ID to avoid handling same packet twice 
   unsigned int ID; 
   
-  /* Descriptor: what type of packet */
+  // Descriptor: what type of packet
   unsigned char Descript;
 
-  /* Time To Live */
+  // Time To Live 
   unsigned char TTL;
   
-  /* Query or responder hostname */
-  char hostname[MAX_STRLEN];
+  // Query or responder hostname
+  unsigned long host_in_addr;
 
-  /* payload, the name of the search string */
+  // payload, the name of the search string 
   char payload_data[MAX_STRLEN];
 
 } packet_t;
@@ -44,24 +44,33 @@ typedef struct packet {
  * ID list - a list for query ID history
  */
 typedef struct IDlist {
-  /* an array for all IDs */
+  // an array for all IDs 
   unsigned int *IDs;
 
-  /* num of all IDs */
+  // num of all IDs 
   int num;
 } IDlist_t;
 
 
 /*
- * Neighbor address
+ * Neighbor information
  */
 typedef struct neighbor_addr {
-  char hostname[32];
-  int portno;
+
+  // the binary addr, load with inet_ntop
+  unsigned long in_addr;
+  
+  // socket file
+  int sockfd;
+
 } neighbor_t;
 
+
 typedef struct neighbors {
+  // the array of neighbors
   neighbor_t *neighbors;
+
+  // the num of neighbors
   int num_neighbors;
 } neighbors_t;
 

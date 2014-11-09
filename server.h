@@ -29,6 +29,9 @@ typedef struct server_arg {
   // Dir to read
   char *Dir;
 
+  // neighbor info
+  neighbors_t *neighbors;
+
 } server_arg_t;
 
 
