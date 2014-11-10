@@ -41,6 +41,19 @@ void server_work(void *arg);
 // find in directories
 int find_in_dir(char *Dir, char *filename);
 
+// handle connect packet
+int server_handle_connect(neighbors_t *neighbors,
+                          packet_t *packet);
+
+// handle query packet
+int server_handle_query(char *Dir, 
+                        neighbors_t *neighbors, 
+                        packet_t *packet,
+                        IDlist_t *IDlist
+                        unsigned long client_ipaddr);
+
+// handle response packet
+int server_handle_respon(packet_t *packet);
 
 
 

@@ -26,64 +26,33 @@ void server_worker(void *arg){
   IDlist_t *IDlist = _arg->IDlist;
   int portno = _arg->portno;
   char *Dir = _arg->Dir;
+  neighbors_t *neighbors = _arg->neighbors;
 
-  // init socket
-  int sockfd = init_socket(portno);
+  // init socket and packet
+  int sockfd = bind_socket(portno);
+  packet_t packet;
+  unsigned long client_ipaddr;
 
   // main while loop
   while (1){
-
-    packet_t *packet;
-
     // accept new packets
-    sock_recvfrom(sockfd, (void *)packet);
-    
-    // if query request
-    if (packet->Descript == QUERY){
-      // compare ID, ignore if repetitive query
-      if (find_in_IDlist(IDlist, packet->ID) == 1){
-        continue;
-      }
+    sock_recvfrom_addr(sockfd, (void *)&packet, sizeof(packet), &client_ipaddr);
+    int type = packet.Descript;
 
-      // if found in folder, then return the msg back to query host
-      if ( find_in_dir(Dir, packet->filename) == 1){
-        // shoot the response to initiator of query
-        packet_t *respon_packet;
-
-        gen_packet(respon_packet, 
-                   packet->filename, 
-                   RESPON,
-                   0);
-
-        sock_sendto(packet->hostname, packet);
-      }
-      // not found, flood to neighbors
-      else {
-        // prepare packet
-        if (update_packet(packet) <= 0){
-          continue;
-        }
-
-        // read neighbor config
-        read_neighbor_config(CONFIG_FILE, neighbors);
-        
-        // update neighbors
-        
-        
-
-        // shoot the packet
-                
-        
-      }
-    } // if query packet
-
-      // else if response
-    else if (packet->Descript == RESPON){
-        
-
+    // react accordingly
+    if (type == CONNECT){
+      server_handle_connect(neighbors);
     }
-
-    free(packet);
+    else if (type == QUERY){
+      server_handle_query(Dir, 
+                          neighbors, 
+                          packet, 
+                          IDlist,
+                          client_ipaddr);
+    }
+    else if (type == RESPON){
+      server_handle_respon();
+    }
 
   } // while loop
 
@@ -116,3 +85,75 @@ int find_in_dir(char *Dir, char *filename){
   return 0;
 }
 
+
+// handle connect packet
+// param:
+// return:
+int server_handle_connect(neighbors_t *neighbors,
+                          packet_t *packet){
+
+  // update the neighbors
+
+
+}
+
+
+// handle query packet
+// param:
+// return:
+int server_handle_query(char *Dir, 
+                        neighbors_t *neighbors, 
+                        packet_t *packet,
+                        IDlist_t *IDlist
+                        unsigned long client_ipaddr){
+
+  packet_t packet;
+
+  // compare ID, ignore if repetitive query
+  if (find_in_IDlist(IDlist, packet->ID) == 1){
+    return 0;
+  }
+
+  // if found in folder, then return the msg back to query host
+  if ( find_in_dir(Dir, packet->filename) == 1){
+    // shoot the response to initiator of query
+    gen_packet(respon_packet,
+               packet->filename,
+               RESPON,
+               0);
+
+    sock_sendto(packet->hostname, packet);
+  }
+  // not found, flood to neighbors
+  else {
+    // gen packet
+    // TODO
+
+    // shoot the packet
+    int i;
+    int num_neighbors;
+    for (i = 0; i < num_neighbors; ++1){
+      unsigned long neighbor_addr;
+
+      // filter out the sender, avoid loops
+      if (neighbor_addr != client_ipaddr){
+
+        // send to this neighbor
+
+      }
+    }
+
+  }
+
+  return 0;
+
+}
+
+
+// handle response packet
+// param:
+// return:
+int server_handle_respon(packet_t *packet){
+
+
+}
