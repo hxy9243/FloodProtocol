@@ -22,12 +22,12 @@
 int 
 main(int argc, char **argv){
 
-  // read in port_no, TTL, DIR, neighbors
+  // read in port_no, TTL, DIR, neighbors from args
   int portno;
   int TTL;
   char Dir[128];
   neighbors_t neighbors;
-
+  
   if (argc < 4){
     ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]");
   }
@@ -38,7 +38,6 @@ main(int argc, char **argv){
       push_neighbor(neighbors, argv[i]);
     }
   }
-
   portno = atoi(argv[1]);
   TTL = atoi(argv[2]);
   strcpy(Dir, argv[3]);
@@ -49,7 +48,6 @@ main(int argc, char **argv){
   // create server config arg
   IDlist_t IDlist;
   server_arg_t server_arg;
-  char *filenames[MAX_STRLEN];
 
   // push values to server args
   server_arg.IDlist = &IDlist;
@@ -76,14 +74,14 @@ main(int argc, char **argv){
     }
 
     // generate packet and add new ID to list
-    packet_t *packet;
+    packet_t packet;
     int packetID;
 
-    packetID = gen_packt(packet,
+    packetID = gen_packt(&packet,
                          filename,
                          QUERY,
                          TTL);
-    add_to_IDlist(IDlist, packetID);
+    add_to_IDlist(&IDlist, packetID);
     
     // send request in UDP to all neighbors
     flood_request(neighbors, packet, sizeof(packet_t));

@@ -12,6 +12,8 @@
 
 
 #define ERROR(x) fprintf(stderr, "%s\n", x);exit(1)
+#define WARN(x) fprintf(stderr, "%s\n", x)
+#define INFO(x) fprintf(stdout, "%s\n", x)
 
 #define CONFIG_FILE "config"
 

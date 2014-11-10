@@ -7,6 +7,7 @@
  */
 
 
+#include "network.h"
 #include "adt.h"
 #include "config.h"
 

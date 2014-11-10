@@ -14,8 +14,9 @@
 #include "config.h"
 
 // define packet type
-#define QUERY 0
-#define RESPON 1
+#define CONNECT 0
+#define QUERY 1
+#define RESPON 2
 
 
 /*
@@ -60,7 +61,7 @@ typedef struct neighbor_addr {
   char hostname[MAX_STRLEN];
 
   // the binary addr, load with inet_ntop
-  unsigned long in_addr;
+  unsigned long ip_addr;
   
   // socket file
   int sockfd;
@@ -70,7 +71,7 @@ typedef struct neighbor_addr {
 
 typedef struct neighbors {
   // the array of neighbors
-  neighbor_t *neighbors;
+  neighbor_t *neighbor_list;
 
   // the num of neighbors
   int num_neighbors;
@@ -111,7 +112,7 @@ void free_IDlist(IDlist_t *IDlist);
  */
 
 // push in a new neighbor
-int push_neighbor(neighbors_t* neighbors, char *neighbor_hostname);
+int push_neighbor(neighbors_t *neighbors, char *neighbor_hostname);
 
 // read in neighbor config
 int read_neighbor_config(char *filename, neighbors_t *neighbors);
