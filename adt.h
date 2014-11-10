@@ -56,6 +56,8 @@ typedef struct IDlist {
  * Neighbor information
  */
 typedef struct neighbor_addr {
+  // neighbors hostname 
+  char hostname[MAX_STRLEN];
 
   // the binary addr, load with inet_ntop
   unsigned long in_addr;
@@ -107,6 +109,9 @@ void free_IDlist(IDlist_t *IDlist);
 /*
  * Neighbor related functions
  */
+
+// push in a new neighbor
+int push_neighbor(neighbors_t* neighbors, char *neighbor_hostname);
 
 // read in neighbor config
 int read_neighbor_config(char *filename, neighbors_t *neighbors);

@@ -47,14 +47,12 @@ main(int argc, char **argv){
   connect_neighbors(neighbors);
 
   // create server config arg
-  IDlist_t *IDlist;
+  IDlist_t IDlist;
   server_arg_t server_arg;
   char *filenames[MAX_STRLEN];
 
-  init_IDlist(IDlist);
-
   // push values to server args
-  server_arg.IDlist = IDlist;
+  server_arg.IDlist = &IDlist;
   server_arg.portno = portno;
   server_arg.Dir = Dir;
 
@@ -65,10 +63,9 @@ main(int argc, char **argv){
 
   // main thread while loop: sender work 
   while (1){
-
+    // read input from user
     char input[MAX_STRLEN];
 
-    // TODO: read input
     printf ("Search in network: ");
 
     fgets(input, MAX_STRLEN, stdin);
@@ -89,7 +86,7 @@ main(int argc, char **argv){
     add_to_IDlist(IDlist, packetID);
     
     // send request in UDP to all neighbors
-    send_request(neighbors, packet, sizeof(packet_t));
+    flood_request(neighbors, packet, sizeof(packet_t));
 
   }
 
