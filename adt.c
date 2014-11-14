@@ -64,12 +64,12 @@ int push_neighbor(neighbor_t *neighbors, char *neighbor_hostname){
 
   // find out about neighbor ip
   new_ip = find_host_ip(neighbor_hostname);
-  new_sockfd = new_udp_sock(new_ip);
+  // new_sockfd = new_udp_sock(new_ip);
 
   // push to neighbor struct
   strcpy(new_neighbor->hostname, neighbor_hostname);
   new_neighbor->ip_addr = new_ip;
-  new_neighbor->sockfd = new_sockfd;
+  // new_neighbor->sockfd = new_sockfd;
 
   return index;
 }
@@ -80,7 +80,7 @@ int push_neighbor(neighbor_t *neighbors, char *neighbor_hostname){
  * param: neighbors - the neighbors info data struct
  * return: 0 on success, -1 otherwise
  */
-int connect_neighbors(neighbors){
+int connect_neighbors(neighbors_t *neighbors){
 
   int i;
   packet_t packet;

@@ -32,7 +32,7 @@ typedef struct packet {
   // Time To Live 
   unsigned char TTL;
   
-  // Query or responder hostname
+  // Query or responder host ip
   unsigned long host_in_addr;
 
   // payload, the name of the search string 
@@ -64,7 +64,7 @@ typedef struct neighbor_addr {
   unsigned long ip_addr;
   
   // socket file
-  int sockfd;
+  // int sockfd;
 
 } neighbor_t;
 

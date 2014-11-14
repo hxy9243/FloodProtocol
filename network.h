@@ -19,10 +19,10 @@
 #include <netinet/in.h>
 
 
-// recv from a socket
-int sock_recvfrom(int sockfd, void *buffer, int size);
+// recv from a socket, return bin ip addr
+unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
 
-// recv to a socket
+// send to a socket
 int sock_sendto(int sockfd, void *buffer, int size);
 
 // find hostname binary ip form

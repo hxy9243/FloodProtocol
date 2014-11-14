@@ -1,0 +1,22 @@
+# The TODO List
+
+* TODO [0/4]:
+
+- [ ] server.c [0/3]: 
+  - [ ] server_handle_query() 
+    Generate packet for new flooding queries
+  - [ ] server_handle_repson()
+  - [ ] server_handle_connect()
+
+- [ ] network.c [0/2]:
+  - [ ] sock_recvfrom()
+  - [ ] sock_sendto()
+
+- [ ] sender.c [0/2]:
+  - [ ] sender basic logic
+  - [ ] mutex to protect IDlist
+
+- [ ] Testing [0/3]:
+  - [ ] network - sender, receiver
+  - [ ] server - handle query
+  - [ ] sender - IDlist, neighbor(s), packet

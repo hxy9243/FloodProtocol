@@ -36,7 +36,7 @@ void server_worker(void *arg){
   // main while loop
   while (1){
     // accept new packets
-    sock_recvfrom_addr(sockfd, (void *)&packet, sizeof(packet), &client_ipaddr);
+    client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet));
     int type = packet.Descript;
 
     // react accordingly
@@ -99,51 +99,60 @@ int server_handle_connect(neighbors_t *neighbors,
 
 
 // handle query packet
-// param:
-// return:
+// param: Dir - the dir to search
+//        neighbors - the adt for all neighbors
+//        packet - the received packet
+//        IDlist - list of IDs 
+//        client_ipaddr - the sender's ip addr
+// return: 0 on success -1 on error
 int server_handle_query(char *Dir, 
                         neighbors_t *neighbors, 
                         packet_t *packet,
                         IDlist_t *IDlist
                         unsigned long client_ipaddr){
 
-  packet_t packet;
+  packet_t respon_packet;
 
   // compare ID, ignore if repetitive query
-  if (find_in_IDlist(IDlist, packet->ID) == 1){
+  if ( find_in_IDlist(IDlist, packet->ID) == 1 ){
     return 0;
   }
 
   // if found in folder, then return the msg back to query host
-  if ( find_in_dir(Dir, packet->filename) == 1){
+  if ( find_in_dir(Dir, packet->filename) == 1 ){
     // shoot the response to initiator of query
-    gen_packet(respon_packet,
+    gen_packet(&respon_packet,
                packet->filename,
                RESPON,
                0);
 
-    sock_sendto(packet->hostname, packet);
+    sock_sendto(packet->host_in_addr, &respon_packet);
   }
   // not found, flood to neighbors
   else {
-    // gen packet
+    // gen packet, update TTL
     // TODO
 
     // shoot the packet
     int i;
-    int num_neighbors;
-    for (i = 0; i < num_neighbors; ++1){
-      unsigned long neighbor_addr;
+    int num_neighbors = neighbors->num_neighbors;
+    neighbor_t *neighbor_list = neighbors->neighbor_list;
+
+    for (i = 0; i < num_neighbors; ++ i){
+      unsigned long neighbor_addr = neighbors->neighbor_list[i].;
 
       // filter out the sender, avoid loops
-      if (neighbor_addr != client_ipaddr){
-
-        // send to this neighbor
-
+      if (neighbor_addr == client_ipaddr){
+        continue;
       }
-    }
 
-  }
+      // send to this neighbor
+      sock_sendto(neighbor_addr,
+                  &respon_packet);
+
+    } // for
+
+  } // else not found, flood to neighbors
 
   return 0;
 
