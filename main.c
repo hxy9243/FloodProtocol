@@ -27,6 +27,7 @@ main(int argc, char **argv){
   int TTL;
   char Dir[128];
   neighbors_t neighbors;
+  mutex_t lock;
   
   if (argc < 4){
     ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]");
@@ -57,6 +58,7 @@ main(int argc, char **argv){
   server_arg.IDlist = &IDlist;
   server_arg.portno = portno;
   server_arg.Dir = Dir;
+  server_arg.lock = &lock;
 
   // spawn threads to handle server work 
   if ( pthread_create(&thread, NULL, server_worker, (void *)args) < 0 ){
@@ -78,18 +80,22 @@ main(int argc, char **argv){
     }
 
     // generate packet and add new ID to list
-    // TODO: use mutex to protect this area
+    // use mutex to protect this area
     packet_t packet;
     int packetID;
 
     packetID = gen_packt(&packet,
-                         filename,
+                         input,
                          QUERY,
                          TTL);
+    pthread_mutex_lock(&lock);
     add_to_IDlist(&IDlist, packetID);
+    pthread_mutex_unlock(&lock);
     
     // send request in UDP to all neighbors
-    flood_request(neighbors, packet, sizeof(packet_t));
+    if ( flood_request(neighbors, packet, sizeof(packet_t)) < 0 ){
+      ERROR("Error sending request");
+    }
   }
 
 }

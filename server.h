@@ -32,6 +32,9 @@ typedef struct server_arg {
   // neighbor info
   neighbors_t *neighbors;
 
+  // mutex
+  mutex_t *lock;
+
 } server_arg_t;
 
 
@@ -43,14 +46,16 @@ int find_in_dir(char *Dir, char *filename);
 
 // handle connect packet
 int server_handle_connect(neighbors_t *neighbors,
-                          packet_t *packet);
+                          packet_t *packet,
+                          mutex_t *lock);
 
 // handle query packet
 int server_handle_query(char *Dir, 
                         neighbors_t *neighbors, 
                         packet_t *packet,
                         IDlist_t *IDlist
-                        unsigned long client_ipaddr);
+                        unsigned long client_ipaddr,
+                        mutex_t *lock);
 
 // handle response packet
 int server_handle_respon(packet_t *packet);

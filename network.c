@@ -45,6 +45,15 @@ char *find_host_ip(unsigned long host_in_addr){
 }
 
 
+// get own address
+// return: ip in bin form
+unsigned long get_own_addr(){
+
+
+
+}
+
+
 // create new udp socket
 // return sockfd
 int new_udp_sock(){
@@ -63,7 +72,7 @@ int udp_bind(int sockfd, int portno){
   bzero ((char *) &serv_addr, sizeof (serv_addr));
   serv_addr.sin_family = AF_INET;
   serv_addr.sin_addr.s_addr = INADDR_ANY;
-  serv_addr.sin_port = htons (portno);
+  serv_addr.sin_port = htons(portno);
 
   if ( bind (sockfd,
 	     (struct sockaddr *)&serv_addr,

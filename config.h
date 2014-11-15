@@ -18,7 +18,7 @@
 #define CONFIG_FILE "config"
 
 #define MAX_STRLEN 32
-
+#define MAX_IDSIZE 64
 
 #endif
 

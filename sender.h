@@ -14,9 +14,11 @@
 #define NEIGHBOR_SIZE 8
 
 
-
 /*
  * Neighbor related functions
  */
+// sender flood requets to all neighbors
+int flood_request(neighbors_t *neighbors, packet_t *packet, int size);
+
 
 #endif

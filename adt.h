@@ -24,7 +24,7 @@
  */
 typedef struct packet {
   // ID to avoid handling same packet twice 
-  unsigned int ID; 
+  int ID; 
   
   // Descriptor: what type of packet
   unsigned char Descript;
@@ -33,8 +33,8 @@ typedef struct packet {
   unsigned char TTL;
   
   // Query or responder host ip
-  unsigned long host_in_addr;
-
+  char hostname[MAX_STRLEN];
+  
   // payload, the name of the search string 
   char payload_data[MAX_STRLEN];
 
@@ -46,7 +46,7 @@ typedef struct packet {
  */
 typedef struct IDlist {
   // an array for all IDs 
-  unsigned int *IDs;
+  int IDs[MAX_IDSIZE];
 
   // num of all IDs 
   int num;
@@ -87,9 +87,6 @@ int gen_ID();
 // generate sending packet according to params, returns ID
 int gen_packet(packet_t *packet, char *filename, int type, int TTL);
 
-// update packet, return TTL
-int update_packet(packet_t *packet);
-
 
 /* 
  * ID list related functions
@@ -98,13 +95,10 @@ int update_packet(packet_t *packet);
 int init_IDlist(IDlist_t *IDlist);
 
 // Add to ID list
-void add_to_IDlist(IDlist_t *IDlist, int ID); 
+int add_to_IDlist(IDlist_t *IDlist, int ID); 
 
 // find in ID list
 int find_in_IDlist(IDlist_t *IDlist, int ID);
-
-// free IDlist
-void free_IDlist(IDlist_t *IDlist);
 
 
 /*

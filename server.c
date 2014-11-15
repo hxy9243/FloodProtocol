@@ -27,11 +27,16 @@ void server_worker(void *arg){
   int portno = _arg->portno;
   char *Dir = _arg->Dir;
   neighbors_t *neighbors = _arg->neighbors;
+  mutex_t *lock = _arg->lock;
 
   // init server socket and packet
-  int sockfd = bind_socket(portno);
+  int sockfd = new_udp_sock();
   packet_t packet;
   unsigned long client_ipaddr;
+
+  if ( udp_bind(sockfd, portno) == -1 ){
+    ERROR("Could not bind to port");
+  }
 
   // main while loop
   while (1){
@@ -41,14 +46,15 @@ void server_worker(void *arg){
 
     // react accordingly
     if (type == CONNECT){
-      server_handle_connect(neighbors);
+      server_handle_connect(neighbors, packet, lock);
     }
     else if (type == QUERY){
       server_handle_query(Dir, 
                           neighbors, 
                           packet, 
                           IDlist,
-                          client_ipaddr);
+                          client_ipaddr,
+                          lock);
     }
     else if (type == RESPON){
       server_handle_respon();
@@ -87,7 +93,8 @@ int find_in_dir(char *Dir, char *filename){
 //        packet - the received packet
 // return: 0 on success -1 on error
 int server_handle_connect(neighbors_t *neighbors,
-                          packet_t *packet){
+                          packet_t *packet,
+                          mutex_t *lock){
 
   int host_in_addr = packet->host_in_addr;
   char *hostip;
@@ -96,7 +103,10 @@ int server_handle_connect(neighbors_t *neighbors,
 
   // update the neighbors
   if ( !find_neighbor(host_in_addr, neighbors) ){
+
+    pthread_mutex_lock(lock);
     push_neighbor(neighbors, host_in_addr);
+    pthread_mutex_unlock(lock);
 
     printf("New neighbor connecting: %s\n", hostip);
   }
@@ -115,15 +125,19 @@ int server_handle_connect(neighbors_t *neighbors,
 int server_handle_query(char *Dir, 
                         neighbors_t *neighbors, 
                         packet_t *packet,
-                        IDlist_t *IDlist
-                        unsigned long client_ipaddr){
+                        IDlist_t *IDlist,
+                        unsigned long client_ipaddr,
+                        mutex_t *lock){
 
   packet_t respon_packet;
 
   // compare ID, ignore if repetitive query
+  pthread_mutex_lock(lock);
   if ( find_in_IDlist(IDlist, packet->ID) == 1 ){
     return 0;
   }
+  add_to_IDlist(IDlist, packet->ID);
+  pthread_mutex_unlock(lock);
 
   // if found in folder, then return the msg back to query host
   if ( find_in_dir(Dir, packet->filename) == 1 ){
@@ -133,7 +147,7 @@ int server_handle_query(char *Dir,
                RESPON,
                0);
 
-    sock_sendto(packet->host_in_addr, &respon_packet);
+    sock_sendto(find_host_addr(packet->hostname), &respon_packet);
 
     printf ("File %s found, responding to query\n", packet->filename);
   }
@@ -175,10 +189,8 @@ int server_handle_respon(packet_t *packet){
   unsigned long host_in_addr = packet->host_in_addr;
   char *host_ip;
 
-  host_ip = find_host_ip(host_in_addr);
-  
   // Display info here
-  printf ("File %s found on %s\n", packet->payload_data, host_ip);
+  printf ("File %s found on %s\n", packet->payload_data, packet->hostname);
           
   return 0;
 }

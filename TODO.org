@@ -1,6 +1,6 @@
 # The TODO List
 
-* TODO [1/5]:
+* TODO [2/5]:
 
 - [X] server.c [6/6]: 
   - [X] create new sockfd from connection
@@ -11,9 +11,9 @@
   - [X] server_handle_connect()
   - [X] display info
 
-- [-] network.c [3/4]:
+- [X] network.c [4/4]:
   - [X] find_host_ip()
-  - [ ] new udp sock()
+  - [X] new udp sock()
   - [X] sock_recvfrom()
   - [X] sock_sendto()
 
@@ -21,8 +21,10 @@
   - [ ] sender basic logic
   - [ ] mutex to protect IDlist and neighbors
 
-- [ ] adt.c [0/1]
+- [ ] adt.c [0/3]
   - [ ] find_neighbor
+  - [ ] ID related functions
+  - [ ] packet related functions
 
 - [ ] Testing [0/3]:
   - [ ] network - sender, receiver
