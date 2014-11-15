@@ -134,6 +134,8 @@ int server_handle_query(char *Dir,
                0);
 
     sock_sendto(packet->host_in_addr, &respon_packet);
+
+    printf ("File %s found, responding to query\n", packet->filename);
   }
   // not found, flood to neighbors
   else {
@@ -148,7 +150,7 @@ int server_handle_query(char *Dir,
     neighbor_t *neighbor_list = neighbors->neighbor_list;
 
     for (i = 0; i < num_neighbors; ++ i){
-      unsigned long neighbor_addr = neighbors->neighbor_list[i].;
+      unsigned long neighbor_addr = neighbors->neighbor_list[i].ip_addr;
 
       // filter out the sender, avoid loops
       if (neighbor_addr == client_ipaddr){
