@@ -53,7 +53,6 @@ void server_worker(void *arg){
     else if (type == RESPON){
       server_handle_respon();
     }
-
   } // while loop
 
 }
@@ -87,14 +86,25 @@ int find_in_dir(char *Dir, char *filename){
 
 
 // handle connect packet
-// param:
-// return:
+// param: neighbors - the neighbors structure
+//        packet - the received packet
+// return: 0 on success -1 on error
 int server_handle_connect(neighbors_t *neighbors,
                           packet_t *packet){
 
+  int host_in_addr = packet->host_in_addr;
+
+  // TODO: get new sockfd from ip address
+
   // update the neighbors
+  if ( !find_neighbor(host_in_addr, neighbors) ){
+    push_neighbor(neighbors, host_in_addr);
 
 
+    // TODO: display info here
+  }
+
+  return 0;
 }
 
 
@@ -130,8 +140,10 @@ int server_handle_query(char *Dir,
   }
   // not found, flood to neighbors
   else {
-    // gen packet, update TTL
-    // TODO
+    // update packet, update TTL, return if TTL hits 0
+    if (-- packet->TTL <= 0){
+      return 0;
+    }
 
     // shoot the packet
     int i;
@@ -147,22 +159,28 @@ int server_handle_query(char *Dir,
       }
 
       // send to this neighbor
-      sock_sendto(neighbor_addr,
-                  &respon_packet);
+      sock_sendto(sockfd,
+                  packet);
 
     } // for
-
   } // else not found, flood to neighbors
 
   return 0;
-
 }
 
 
 // handle response packet
-// param:
-// return:
+// param: packet - the packet to send
+// return: 0 on success -1 on error
 int server_handle_respon(packet_t *packet){
 
+  unsigned long host_in_addr = packet->host_in_addr;
+  char host_ip[16];
 
+  // TODO: translate hostname
+  
+  // Display info here
+  printf ("File %s found on %s\n", packet->payload_data, hostname);
+          
+  return 0;
 }

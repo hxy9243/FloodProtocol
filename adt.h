@@ -64,7 +64,7 @@ typedef struct neighbor_addr {
   unsigned long ip_addr;
   
   // socket file
-  // int sockfd;
+  int sockfd;
 
 } neighbor_t;
 
@@ -110,14 +110,14 @@ void free_IDlist(IDlist_t *IDlist);
 /*
  * Neighbor related functions
  */
-
 // push in a new neighbor
-int push_neighbor(neighbors_t *neighbors, char *neighbor_hostname);
+int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr);
 
 // read in neighbor config
 int read_neighbor_config(char *filename, neighbors_t *neighbors);
 
-
+// find neighbor in neighbors
+int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbor); 
 
 
 #endif

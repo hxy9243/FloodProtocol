@@ -2,13 +2,18 @@
 
 * TODO [0/4]:
 
-- [ ] server.c [0/3]: 
+- [ ] server.c [0/6]: 
+  - [ ] create new sockfd from connection
+  - [ ] display info
+  - [ ] translate hostip from raw ip address
   - [ ] server_handle_query() 
     Generate packet for new flooding queries
   - [ ] server_handle_repson()
   - [ ] server_handle_connect()
 
 - [ ] network.c [0/2]:
+  - [ ] find_host_ip()
+  - [ ] new udp sock()
   - [ ] sock_recvfrom()
   - [ ] sock_sendto()
 

@@ -35,7 +35,12 @@ main(int argc, char **argv){
     int i;
     for (i = 4; i < argc; ++ i){
       // save neighbors to data structure
-      push_neighbor(neighbors, argv[i]);
+      unsigned long host_in_ip = find_host_ip(argv[i]);
+      if (host_in_ip < 0){
+        ERROR("Could not find host %s\n", argv[i]);
+      }
+
+      push_neighbor(neighbors, host_in_ip);
     }
   }
   portno = atoi(argv[1]);
@@ -74,6 +79,7 @@ main(int argc, char **argv){
     }
 
     // generate packet and add new ID to list
+    // TODO: use mutex to protect this area
     packet_t packet;
     int packetID;
 
@@ -85,7 +91,6 @@ main(int argc, char **argv){
     
     // send request in UDP to all neighbors
     flood_request(neighbors, packet, sizeof(packet_t));
-
   }
 
 }
