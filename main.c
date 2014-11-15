@@ -35,7 +35,7 @@ main(int argc, char **argv){
     int i;
     for (i = 4; i < argc; ++ i){
       // save neighbors to data structure
-      unsigned long host_in_addr = find_host_ip(argv[i]);
+      unsigned long host_in_addr = find_host_addr(argv[i]);
       if (host_in_addr < 0){
         ERROR("Could not find host %s\n", argv[i]);
       }

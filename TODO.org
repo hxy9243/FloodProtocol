@@ -1,17 +1,17 @@
 # The TODO List
 
-* TODO [0/4]:
+* TODO [1/5]:
 
-- [ ] server.c [0/6]: 
-  - [ ] create new sockfd from connection
-  - [ ] display info
-  - [ ] translate hostip from raw ip address
-  - [ ] server_handle_query() 
+- [X] server.c [6/6]: 
+  - [X] create new sockfd from connection
+  - [X] translate hostip from raw ip address
+  - [X] server_handle_query() 
     Generate packet for new flooding queries
-  - [ ] server_handle_repson()
-  - [ ] server_handle_connect()
+  - [X] server_handle_repson()
+  - [X] server_handle_connect()
+  - [X] display info
 
-- [ ] network.c [0/2]:
+- [ ] network.c [0/4]:
   - [ ] find_host_ip()
   - [ ] new udp sock()
   - [ ] sock_recvfrom()
@@ -20,6 +20,9 @@
 - [ ] sender.c [0/2]:
   - [ ] sender basic logic
   - [ ] mutex to protect IDlist
+
+- [ ] adt.c [0/1]
+  - [ ] find_neighbor
 
 - [ ] Testing [0/3]:
   - [ ] network - sender, receiver

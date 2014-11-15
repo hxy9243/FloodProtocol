@@ -26,7 +26,10 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
 int sock_sendto(int sockfd, void *buffer, int size);
 
 // find hostname binary ip form
-unsigned long find_host_ip(char *hostname);
+unsigned long find_host_addr(char *hostname);
+
+// find hostname char readable form
+char *find_host_ip(unsigned long host_in_addr);
 
 // create new udp socket
 int new_udp_sock(unsigned long ip_addr);

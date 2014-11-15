@@ -28,7 +28,7 @@ void server_worker(void *arg){
   char *Dir = _arg->Dir;
   neighbors_t *neighbors = _arg->neighbors;
 
-  // init socket and packet
+  // init server socket and packet
   int sockfd = bind_socket(portno);
   packet_t packet;
   unsigned long client_ipaddr;
@@ -37,7 +37,7 @@ void server_worker(void *arg){
   while (1){
     // accept new packets
     client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet));
-    int type = packet.Descript;
+    unsigned char type = packet.Descript;
 
     // react accordingly
     if (type == CONNECT){
@@ -72,15 +72,12 @@ int find_in_dir(char *Dir, char *filename){
 
   // loop in dir, search for the filename
   while ( (dirstruct = readdir(dp)) != NULL ){
-
     if ( strcmp(filenames, dirstruct->d_name) == 0 ){
       return 1;
     }
-
   }
 
   closedir(dp);
-
   return 0;
 }
 
@@ -93,15 +90,15 @@ int server_handle_connect(neighbors_t *neighbors,
                           packet_t *packet){
 
   int host_in_addr = packet->host_in_addr;
+  char *hostip;
 
-  // TODO: get new sockfd from ip address
-  int sockfd = new_udp_sock(host_in_addr);
+  hostip = find_host_ip(host_inaddr);
 
   // update the neighbors
   if ( !find_neighbor(host_in_addr, neighbors) ){
     push_neighbor(neighbors, host_in_addr);
 
-    // TODO: display info here
+    printf("New neighbor connecting: %s\n", hostip);
   }
 
   return 0;
@@ -159,8 +156,7 @@ int server_handle_query(char *Dir,
       }
 
       // send to this neighbor
-      sock_sendto(sockfd,
-                  packet);
+      sock_sendto(sockfd, packet);
 
     } // for
   } // else not found, flood to neighbors
@@ -175,12 +171,12 @@ int server_handle_query(char *Dir,
 int server_handle_respon(packet_t *packet){
 
   unsigned long host_in_addr = packet->host_in_addr;
-  char host_ip[16];
+  char *host_ip;
 
-  // TODO: translate hostname
+  host_ip = find_host_ip(host_in_addr);
   
   // Display info here
-  printf ("File %s found on %s\n", packet->payload_data, hostname);
+  printf ("File %s found on %s\n", packet->payload_data, host_ip);
           
   return 0;
 }
