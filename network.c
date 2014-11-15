@@ -17,6 +17,8 @@
 
 
 // find hostname binary ip form
+// param: hostname 
+// return: ipaddr in bin form
 unsigned long find_host_addr(char *hostname){
   struct hostent *hp;
   struct in_addr **in_addr;
@@ -31,7 +33,10 @@ unsigned long find_host_addr(char *hostname){
   return ipaddr;
 }
 
+
 // find hostname char readable form
+// param: host_in_addr - bin form ip
+// return: char pointer to ip
 char *find_host_ip(unsigned long host_in_addr){
   struct in_addr in_addr;
   in_addr.s_addr = host_in_addr;
@@ -41,6 +46,7 @@ char *find_host_ip(unsigned long host_in_addr){
 
 
 // create new udp socket
+// return sockfd
 int new_udp_sock(){
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -49,6 +55,8 @@ int new_udp_sock(){
 
 
 // bind to port
+// param: sockfd, portno
+// return: 0 on success -1 on error
 int udp_bind(int sockfd, int portno){
 
   struct sockaddr_in serv_addr;
@@ -67,6 +75,8 @@ int udp_bind(int sockfd, int portno){
 
 
 // recv from a socket, return bin ip addr
+// param: sockfd, buffer, size
+// return: ip in bin form
 unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
   int totalsize;
   int recved;
@@ -92,6 +102,8 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
 
 
 // send to a socket
+// param: ip_addr, buffer, size
+// return: 0 on success -1 on error
 int sock_sendto(unsigned long ip_addr, void *buffer, int size){
   int sockfd;
   struct in_addr in_addr;

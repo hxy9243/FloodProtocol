@@ -32,7 +32,7 @@ int new_udp_sock(unsigned long ip_addr);
 unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
 
 // send to a socket
-int sock_sendto(int sockfd, void *buffer, int size);
+int sock_sendto(unsigned long ip_addr, void *buffer, int size);
 
 
 #endif
