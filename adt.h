@@ -111,7 +111,7 @@ void free_IDlist(IDlist_t *IDlist);
  * Neighbor related functions
  */
 // push in a new neighbor
-int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr);
+int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr, int sockfd);
 
 // read in neighbor config
 int read_neighbor_config(char *filename, neighbors_t *neighbors);

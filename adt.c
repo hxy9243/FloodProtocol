@@ -45,12 +45,12 @@ void free_IDlist(IDlist_t *IDlist);
 /*
  * push a new neighbor into the neighbor data structure
  * param: neighbors - the neighbors info data struct
- *        neighbor_hostname - hostname
+ *        neighbor_host_in_addr - host inet addr
+ *        sockfd - the corresponding sock to neighbor
  * return: the total num of neighbors after push
  *         -1 if any failure
  */
-int push_neighbor(neighbor_t *neighbors, char *neighbor_hostname){
-
+int push_neighbor(neighbor_t *neighbors, unsigned long host_in_addr){
   int index = ++ neighbor->num_neighbors;
   unsigned long new_ip;
   int new_sockfd;
@@ -63,13 +63,11 @@ int push_neighbor(neighbor_t *neighbors, char *neighbor_hostname){
   }
 
   // find out about neighbor ip
-  new_ip = find_host_ip(neighbor_hostname);
-  // new_sockfd = new_udp_sock(new_ip);
+  new_sockfd = new_udp_sock(new_ip);
 
   // push to neighbor struct
-  strcpy(new_neighbor->hostname, neighbor_hostname);
   new_neighbor->ip_addr = new_ip;
-  // new_neighbor->sockfd = new_sockfd;
+  new_neighbor->sockfd = new_sockfd;
 
   return index;
 }

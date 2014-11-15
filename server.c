@@ -95,11 +95,11 @@ int server_handle_connect(neighbors_t *neighbors,
   int host_in_addr = packet->host_in_addr;
 
   // TODO: get new sockfd from ip address
+  int sockfd = new_udp_sock(host_in_addr);
 
   // update the neighbors
   if ( !find_neighbor(host_in_addr, neighbors) ){
     push_neighbor(neighbors, host_in_addr);
-
 
     // TODO: display info here
   }
