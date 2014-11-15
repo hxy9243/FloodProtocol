@@ -11,15 +11,15 @@
   - [X] server_handle_connect()
   - [X] display info
 
-- [ ] network.c [0/4]:
-  - [ ] find_host_ip()
+- [-] network.c [3/4]:
+  - [X] find_host_ip()
   - [ ] new udp sock()
-  - [ ] sock_recvfrom()
-  - [ ] sock_sendto()
+  - [X] sock_recvfrom()
+  - [X] sock_sendto()
 
 - [ ] sender.c [0/2]:
   - [ ] sender basic logic
-  - [ ] mutex to protect IDlist
+  - [ ] mutex to protect IDlist and neighbors
 
 - [ ] adt.c [0/1]
   - [ ] find_neighbor

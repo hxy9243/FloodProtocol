@@ -19,12 +19,6 @@
 #include <netinet/in.h>
 
 
-// recv from a socket, return bin ip addr
-unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
-
-// send to a socket
-int sock_sendto(int sockfd, void *buffer, int size);
-
 // find hostname binary ip form
 unsigned long find_host_addr(char *hostname);
 
@@ -33,6 +27,12 @@ char *find_host_ip(unsigned long host_in_addr);
 
 // create new udp socket
 int new_udp_sock(unsigned long ip_addr);
+
+// recv from a socket, return bin ip addr
+unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
+
+// send to a socket
+int sock_sendto(int sockfd, void *buffer, int size);
 
 
 #endif
