@@ -105,13 +105,16 @@ int find_in_IDlist(IDlist_t *IDlist, int ID);
  * Neighbor related functions
  */
 // push in a new neighbor
-int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr, int sockfd);
+int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr);
 
 // read in neighbor config
 int read_neighbor_config(char *filename, neighbors_t *neighbors);
 
+// connect to all neighbors
+int connect_neighbors(neighbors_t *neighbors, int portno);
+
 // find neighbor in neighbors
-int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbor); 
+int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors); 
 
 
 #endif

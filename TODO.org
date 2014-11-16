@@ -1,6 +1,6 @@
 # The TODO List
 
-* TODO [2/5]:
+* TODO [4/5]:
 
 - [X] server.c [6/6]: 
   - [X] create new sockfd from connection
@@ -17,14 +17,14 @@
   - [X] sock_recvfrom()
   - [X] sock_sendto()
 
-- [ ] sender.c [0/2]:
-  - [ ] sender basic logic
-  - [ ] mutex to protect IDlist and neighbors
+- [X] sender.c [2/2]:
+  - [X] sender basic logic
+  - [X] mutex to protect IDlist and neighbors
 
-- [ ] adt.c [0/3]
-  - [ ] find_neighbor
-  - [ ] ID related functions
-  - [ ] packet related functions
+- [X] adt.c [3/3]
+  - [X] find_neighbor
+  - [X] ID related functions
+  - [X] packet related functions
 
 - [ ] Testing [0/3]:
   - [ ] network - sender, receiver

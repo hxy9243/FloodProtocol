@@ -18,7 +18,7 @@
  * Neighbor related functions
  */
 // sender flood requets to all neighbors
-int flood_request(neighbors_t *neighbors, packet_t *packet, int size);
+int flood_request(neighbors_t *neighbors, int portno, packet_t *packet, int size);
 
 
 #endif

@@ -21,7 +21,7 @@
 // generate a random ID for each payload 
 int gen_ID(){
   srand(time(NULL));
-  return = rand();
+  return rand();
 }
 
 // generate sending packet according to params, returns ID
@@ -87,11 +87,11 @@ int find_in_IDlist(IDlist_t *IDlist, int ID){
  * return: the total num of neighbors after push
  *         -1 if any failure
  */
-int push_neighbor(neighbor_t *neighbors, unsigned long host_in_addr){
-  int index = ++ neighbor->num_neighbors;
+int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
+  int index = ++ neighbors->num_neighbors;
   unsigned long new_ip;
   int new_sockfd;
-  neighbor_t *new_neighbor = &neighbors->neighbor_list[index];
+  neighbor_t *new_neighbor = &(neighbors->neighbor_list[index]);
 
   // TODO: alloc new mem for neighbor instead of dropping
   if (index >= MAX_NEIGHBOR){
@@ -115,7 +115,7 @@ int push_neighbor(neighbor_t *neighbors, unsigned long host_in_addr){
  * param: neighbors - the neighbors info data struct
  * return: 0 on success, -1 otherwise
  */
-int connect_neighbors(neighbors_t *neighbors){
+int connect_neighbors(neighbors_t *neighbors, int portno){
 
   int i;
   packet_t packet;
@@ -123,7 +123,7 @@ int connect_neighbors(neighbors_t *neighbors){
   neighbor_t *neighbor;
 
   // send to all neighbors
-  for (i = 0; i < num_neighbors; ++){
+  for (i = 0; i < num_neighbors; ++i){
     // gen packet
     gen_packet(&packet,
                NULL,
@@ -132,7 +132,8 @@ int connect_neighbors(neighbors_t *neighbors){
                
     // send to the neighbor
     neighbor = &neighbors->neighbor_list[i];
-    sendto(neighbor->fd, (void *)packet, sizeof(packet));
+    sock_sendto(neighbor->ip_addr, portno, 
+                (void *)&packet, sizeof(packet));
 
   }
   

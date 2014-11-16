@@ -36,7 +36,7 @@ int udp_bind(int sockfd, int portno);
 unsigned long sock_recvfrom(int sockfd, void *buffer, int size);
 
 // send to a socket
-int sock_sendto(unsigned long ip_addr, void *buffer, int size);
+int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size);
 
 
 #endif

@@ -6,17 +6,20 @@
  * descript: Main helper functions
  */
 
+#include <stdio.h>
+
 
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
 
-#define ERROR(x) fprintf(stderr, "%s\n", x);exit(1)
-#define WARN(x) fprintf(stderr, "%s\n", x)
-#define INFO(x) fprintf(stdout, "%s\n", x)
+#define ERROR(x) fprintf(stderr, x);exit(1)
+#define WARN(x) fprintf(stderr, x)
+#define INFO(x) fprintf(stdout, x)
 
 #define CONFIG_FILE "config"
 
+#define MAX_NEIGHBOR 8
 #define MAX_STRLEN 32
 #define MAX_IDSIZE 64
 

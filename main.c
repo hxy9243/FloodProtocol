@@ -6,7 +6,7 @@
  * descript: The main function
  */
 
-#include "packet.h"
+#include "adt.h"
 #include "sender.h"
 #include "server.h"
 #include "network.h"
@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 /* The main function */
@@ -27,10 +29,10 @@ main(int argc, char **argv){
   int TTL;
   char Dir[128];
   neighbors_t neighbors;
-  mutex_t lock;
+  pthread_mutex_t lock;
   
   if (argc < 4){
-    ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]");
+    ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]\n");
   }
   if (argc > 4){
     int i;
@@ -38,9 +40,9 @@ main(int argc, char **argv){
       // save neighbors to data structure
       unsigned long host_in_addr = find_host_addr(argv[i]);
       if (host_in_addr < 0){
-        ERROR("Could not find host %s\n", argv[i]);
+        ERROR("Could not find host\n");
       }
-      push_neighbor(neighbors, host_in_ip);
+      push_neighbor(&neighbors, host_in_addr);
     }
   }
   portno = atoi(argv[1]);
@@ -48,7 +50,7 @@ main(int argc, char **argv){
   strcpy(Dir, argv[3]);
 
   // contact neighbors and establish connection
-  connect_neighbors(neighbors);
+  connect_neighbors(&neighbors, portno);
 
   // create server config arg
   IDlist_t IDlist;
@@ -61,7 +63,12 @@ main(int argc, char **argv){
   server_arg.lock = &lock;
 
   // spawn threads to handle server work 
-  if ( pthread_create(&thread, NULL, server_worker, (void *)args) < 0 ){
+  pthread_t thread;
+  if ( pthread_mutex_init (&lock, NULL) != 0 ){
+    ERROR ("Error creating mutex\n");
+  }
+
+  if ( pthread_create(&thread, NULL, server_worker, (void *)&server_arg) < 0 ){
     ERROR("Error creating receiver thread\n");
   }
 
@@ -93,9 +100,10 @@ main(int argc, char **argv){
     pthread_mutex_unlock(&lock);
     
     // send request in UDP to all neighbors
-    if ( flood_request(neighbors, packet, sizeof(packet_t)) < 0 ){
+    if ( flood_request(&neighbors, portno, &packet, sizeof(packet_t)) < 0 ){
       ERROR("Error sending request");
     }
   }
+
 
 }

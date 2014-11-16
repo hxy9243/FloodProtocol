@@ -7,6 +7,7 @@
  */
 
 
+#include "adt.h"
 #include "sender.h"
 #include "config.h"
 #include "network.h"
@@ -16,7 +17,7 @@
 // sender flood requets to all neighbors
 // param:
 // return: 0 on success -1 on error
-int flood_request(neighbors_t *neighbors, packet_t *packet, int size){
+int flood_request(neighbors_t *neighbors, int portno, packet_t *packet, int size){
   int i;
   int num_neighbors = neighbors->num_neighbors;
   unsigned long ip_addr;
@@ -24,7 +25,7 @@ int flood_request(neighbors_t *neighbors, packet_t *packet, int size){
   for (i = 0; i < num_neighbors; ++ i){
     ip_addr = neighbors->neighbor_list[i].ip_addr;
 
-    if (sock_sendto(ip_addr, packet, size) < 0) {
+    if (sock_sendto(ip_addr, portno, packet, size) < 0) {
       return -1;
     }
   }

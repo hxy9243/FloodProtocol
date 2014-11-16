@@ -9,6 +9,8 @@
 
 #include "network.h"
 
+#include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -21,14 +23,14 @@
 // return: ipaddr in bin form
 unsigned long find_host_addr(char *hostname){
   struct hostent *hp;
-  struct in_addr **in_addr;
+  struct in_addr **addr_list;
   unsigned long ipaddr;
 
   if ( (hp = gethostbyname(hostname)) == NULL ){
     return 0;
   }
   addr_list = (struct in_addr**)hp->h_addr_list;
-  ipaddr = *addr_list[0];
+  ipaddr = (*addr_list[0]).s_addr;
 
   return ipaddr;
 }
@@ -42,15 +44,6 @@ char *find_host_ip(unsigned long host_in_addr){
   in_addr.s_addr = host_in_addr;
 
   return inet_ntoa(in_addr);
-}
-
-
-// get own address
-// return: ip in bin form
-unsigned long get_own_addr(){
-
-
-
 }
 
 
@@ -95,8 +88,8 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
   socklen_t addrlen = sizeof (remoteaddr);
 
   while (allrecved < size){
-    recved = recvfrom (server_sockfd,
-		       buff + allrecved,
+    recved = recvfrom (sockfd,
+		       buffer + allrecved,
 		       totalsize - allrecved,
 		       0,
 		       (struct sockaddr *)&remoteaddr,
@@ -113,7 +106,7 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
 // send to a socket
 // param: ip_addr, buffer, size
 // return: 0 on success -1 on error
-int sock_sendto(unsigned long ip_addr, void *buffer, int size){
+int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
   int sockfd;
   struct in_addr in_addr;
   struct hostent *hp;
