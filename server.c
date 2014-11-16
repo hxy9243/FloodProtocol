@@ -42,6 +42,8 @@ void *server_worker(void *arg){
     ERROR("Could not bind to port\n");
   }
 
+  printf("Successfully bind to port %d\n", portno);
+
   // main while loop
   while (1){
     // accept new packets

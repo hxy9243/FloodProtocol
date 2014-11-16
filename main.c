@@ -77,7 +77,7 @@ main(int argc, char **argv){
     // read input from user
     char input[MAX_STRLEN];
 
-    printf ("Search in network: ");
+    printf ("Search in network: \n");
 
     fgets(input, MAX_STRLEN, stdin);
     // strip trailing '\n'
@@ -91,7 +91,7 @@ main(int argc, char **argv){
     packet_t packet;
     int packetID;
 
-    packetID = gen_packt(&packet,
+    packetID = gen_packet(&packet,
                          input,
                          QUERY,
                          TTL);
