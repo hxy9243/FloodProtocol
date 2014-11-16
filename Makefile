@@ -5,13 +5,14 @@ CFLAGS := -c
 LDFLAGS := -lpthread
 
 BIN := query_flood
-SRCS := *.cc
-OBJ := *.o
+SRCS := %.c
+OBJ := main.o sender.o server.o adt.o network.o
+
 
 $(BIN): $(OBJ)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
-$(BUILD)/%.o: %.c %.h
+%.o: %.c %.h
 	$(CC) $< -o $@ $(CFLAGS)
 
 clean:
