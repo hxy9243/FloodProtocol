@@ -106,12 +106,14 @@ int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
   unsigned long new_ip;
   int new_sockfd;
   neighbor_t *new_neighbor = &(neighbors->neighbor_list[index]);
-  index ++;
+  
+  neighbors->num_neighbors ++;
+  
 
   printf("Num of neighbors is now: %d\n", index);
 
   // TODO: alloc new mem for neighbor instead of dropping
-  if (index >= MAX_NEIGHBOR){
+  if (neighbors->num_neighbors >= MAX_NEIGHBOR){
     WARN("Exceeds max neighbor number\n");
     return -1;
   }
@@ -139,6 +141,8 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
   packet_t packet;
   int num_neighbors = neighbors->num_neighbors;
   neighbor_t *neighbor;
+
+  printf ("%d neighbors to connect\n", num_neighbors);
 
   // send to all neighbors
   for (i = 0; i < num_neighbors; ++i){

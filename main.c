@@ -44,6 +44,8 @@ main(int argc, char **argv){
 
     printf ("After init neighbors\n");
     for (i = 4; i < argc; ++ i){
+      printf("%dth neighbor to push in.\n", i - 3);
+
       // save neighbors to data structure
       unsigned long host_in_addr = find_host_addr(argv[i]);
       if (host_in_addr < 0){
