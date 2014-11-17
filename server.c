@@ -56,6 +56,7 @@ void *server_worker(void *arg){
     case 0: printf("CONNECT\n"); break;
     case 1: printf("QUERY\n"); break;
     case 2: printf("RESPON\n"); break;
+    default: printf("WTF?\n"); break;
     }
 
     // react accordingly
