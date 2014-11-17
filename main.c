@@ -31,11 +31,18 @@ main(int argc, char **argv){
   neighbors_t neighbors;
   pthread_mutex_t lock;
   
+  printf ("arg number is %d\n", argc);
+
   if (argc < 4){
     ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]\n");
   }
-  if (argc > 4){
+
+  if (argc >= 4){
+    // init neighbors
+    init_neighbors(&neighbors);
     int i;
+
+    printf ("After init neighbors\n");
     for (i = 4; i < argc; ++ i){
       // save neighbors to data structure
       unsigned long host_in_addr = find_host_addr(argv[i]);
@@ -49,12 +56,15 @@ main(int argc, char **argv){
   TTL = atoi(argv[2]);
   strcpy(Dir, argv[3]);
 
-  // contact neighbors and establish connection
-  connect_neighbors(&neighbors, portno);
-
+  // create and init data structure
   // create server config arg
   IDlist_t IDlist;
   server_arg_t server_arg;
+  // init IDlist
+  init_IDlist(&IDlist);
+
+  // contact neighbors and establish connection
+  connect_neighbors(&neighbors, portno);
 
   // push values to server args
   server_arg.IDlist = &IDlist;

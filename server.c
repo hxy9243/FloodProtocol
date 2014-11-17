@@ -50,6 +50,14 @@ void *server_worker(void *arg){
     client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet));
     unsigned char type = packet.Descript;
 
+    printf("Received new packet: ");
+
+    switch(type){
+    case 0: printf("CONNECT\n"); break;
+    case 1: printf("QUERY\n"); break;
+    case 2: printf("RESPON\n"); break;
+    }
+
     // react accordingly
     if (type == CONNECT){
       server_handle_connect(neighbors, &packet, lock);
@@ -114,6 +122,8 @@ int server_handle_connect(neighbors_t *neighbors,
   }
 
   pthread_mutex_unlock(lock);
+
+  printf("New neighbor connecting!\n");
   return 0;
 }
 

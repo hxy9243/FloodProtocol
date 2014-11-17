@@ -1,8 +1,8 @@
 CC := gcc
 SRC := src
 
-CFLAGS := -c
-LDFLAGS := -lpthread
+CFLAGS := -c -g
+LDFLAGS := -lpthread -g
 
 BIN := query_flood
 SRCS := %.c

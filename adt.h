@@ -71,7 +71,7 @@ typedef struct neighbor_addr {
 
 typedef struct neighbors {
   // the array of neighbors
-  neighbor_t *neighbor_list;
+  neighbor_t neighbor_list[MAX_NEIGHBOR];
 
   // the num of neighbors
   int num_neighbors;
@@ -104,6 +104,9 @@ int find_in_IDlist(IDlist_t *IDlist, int ID);
 /*
  * Neighbor related functions
  */
+// init neighbors
+int init_neighbors(neighbors_t *neighbors);
+
 // push in a new neighbor
 int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr);
 

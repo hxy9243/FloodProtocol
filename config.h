@@ -19,7 +19,7 @@
 
 #define CONFIG_FILE "config"
 
-#define MAX_NEIGHBOR 8
+#define MAX_NEIGHBOR 16
 #define MAX_STRLEN 32
 #define MAX_IDSIZE 64
 

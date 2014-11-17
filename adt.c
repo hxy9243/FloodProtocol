@@ -24,6 +24,7 @@ int gen_ID(){
   return rand();
 }
 
+
 // generate sending packet according to params, returns ID
 // return 0 on success -1 on error
 int gen_packet(packet_t *packet, char *filename, int type, int TTL){
@@ -36,7 +37,10 @@ int gen_packet(packet_t *packet, char *filename, int type, int TTL){
   gethostname(hostname, MAX_STRLEN);
 
   strcpy(packet->hostname, hostname);
-  strcpy(packet->payload_data, filename);
+
+  if (filename != NULL){
+    strcpy(packet->payload_data, filename);
+  }
 
   return 0;
 }
@@ -79,32 +83,46 @@ int find_in_IDlist(IDlist_t *IDlist, int ID){
 }
 
 
-/*
- * push a new neighbor into the neighbor data structure
- * param: neighbors - the neighbors info data struct
- *        neighbor_host_in_addr - host inet addr
- *        sockfd - the corresponding sock to neighbor
- * return: the total num of neighbors after push
- *         -1 if any failure
- */
+// init neighbor structure
+// param: neighbors - reference to neighbors
+// return: 0 on success -1 on error
+int init_neighbors(neighbors_t *neighbors){
+  neighbors->num_neighbors = 0;
+
+  printf("Num of neighbors inited to %d\n", neighbors->num_neighbors);
+
+  return 0;
+}
+
+
+// push a new neighbor into the neighbor data structure
+// param: neighbors - the neighbors info data struct
+//       neighbor_host_in_addr - host inet addr
+//       sockfd - the corresponding sock to neighbor
+// return: the total num of neighbors after push
+//        -1 if any failure
 int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
-  int index = ++ neighbors->num_neighbors;
+  int index = neighbors->num_neighbors;
   unsigned long new_ip;
   int new_sockfd;
   neighbor_t *new_neighbor = &(neighbors->neighbor_list[index]);
+  index ++;
+
+  printf("Num of neighbors is now: %d\n", index);
 
   // TODO: alloc new mem for neighbor instead of dropping
   if (index >= MAX_NEIGHBOR){
-    WARN("Exceeds max neighbor number");
+    WARN("Exceeds max neighbor number\n");
     return -1;
   }
 
-  // find out about neighbor ip
-  new_sockfd = new_udp_sock(new_ip);
 
+  // find out about neighbor ip
+  // new_sockfd = new_udp_sock(new_ip);
+  
   // push to neighbor struct
   new_neighbor->ip_addr = new_ip;
-  new_neighbor->sockfd = new_sockfd;
+  // new_neighbor->sockfd = new_sockfd;
 
   return index;
 }
@@ -124,6 +142,7 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
 
   // send to all neighbors
   for (i = 0; i < num_neighbors; ++i){
+
     // gen packet
     gen_packet(&packet,
                NULL,
@@ -134,6 +153,9 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
     neighbor = &neighbors->neighbor_list[i];
     sock_sendto(neighbor->ip_addr, portno, 
                 (void *)&packet, sizeof(packet));
+
+    printf("Connected to neighbor %s\n",
+	   find_host_ip(neighbor->ip_addr));
 
   }
   
