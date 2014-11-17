@@ -95,6 +95,7 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
 		       (struct sockaddr *)&remoteaddr,
 		       &addrlen);
     allrecved += recved;
+    printf("all received %d\n", allrecved);
   }
 
   unsigned long bin_ip = remoteaddr.sin_addr.s_addr;
@@ -141,6 +142,8 @@ int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
                       (struct sockaddr *)&servaddr,
                       sizeof(servaddr));
     totalsent += sent;
+    printf ("sent %d, totalsent %d\n", sent, totalsent);
+
   }
 
   close(sockfd);
