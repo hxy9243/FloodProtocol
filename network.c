@@ -146,6 +146,6 @@ int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
 
   }
 
-  //  close(sockfd);
+  close(sockfd);
   return 0;
 }

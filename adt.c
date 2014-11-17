@@ -103,12 +103,12 @@ int init_neighbors(neighbors_t *neighbors){
 //        -1 if any failure
 int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
   int index = neighbors->num_neighbors;
-  unsigned long new_ip;
   int new_sockfd;
   neighbor_t *new_neighbor = &(neighbors->neighbor_list[index]);
   
-  neighbors->num_neighbors ++;
-  
+  printf("Num of neighbors was: %d\n", index);
+
+  neighbors->num_neighbors = neighbors->num_neighbors+1;
 
   printf("Num of neighbors is now: %d\n", index);
 
@@ -123,7 +123,7 @@ int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
   // new_sockfd = new_udp_sock(new_ip);
   
   // push to neighbor struct
-  new_neighbor->ip_addr = new_ip;
+  new_neighbor->ip_addr = host_in_addr;
   // new_neighbor->sockfd = new_sockfd;
 
   return index;

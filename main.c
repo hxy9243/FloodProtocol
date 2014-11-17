@@ -73,6 +73,7 @@ main(int argc, char **argv){
   server_arg.portno = portno;
   server_arg.Dir = Dir;
   server_arg.lock = &lock;
+  server_arg.neighbors = &neighbors;
 
   // spawn threads to handle server work 
   pthread_t thread;
