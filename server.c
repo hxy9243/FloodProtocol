@@ -47,7 +47,7 @@ void *server_worker(void *arg){
   // main while loop
   while (1){
     // accept new packets
-    client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet));
+    client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet_t));
     unsigned char type = packet.Descript;
 
     printf("Received new packet: ");
