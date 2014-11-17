@@ -79,15 +79,14 @@ int udp_bind(int sockfd, int portno){
 // recv from a socket, return bin ip addr
 // param: sockfd, buffer, size
 // return: ip in bin form
-unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
-  int totalsize;
+unsigned long sock_recvfrom(int sockfd, void *buffer, int totalsize){
   int recved;
   int allrecved = 0;
 
   struct sockaddr_in remoteaddr;
-  socklen_t addrlen = sizeof (remoteaddr);
+  socklen_t addrlen = sizeof(remoteaddr);
 
-  while (allrecved < size){
+  while (allrecved < totalsize){
     recved = recvfrom(sockfd,
 		      buffer + allrecved,
 		      totalsize - allrecved,
@@ -95,6 +94,7 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int size){
 		      (struct sockaddr *)&remoteaddr,
 		      &addrlen);
     allrecved += recved;
+
     printf("recved %d, all received %d\n", recved, allrecved);
   }
 
