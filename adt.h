@@ -56,6 +56,7 @@ typedef struct IDlist {
 /*
  * Neighbor information
  */
+// neighbor structure
 typedef struct neighbor_addr {
   // neighbors hostname 
   char hostname[MAX_STRLEN];
@@ -69,6 +70,7 @@ typedef struct neighbor_addr {
 } neighbor_t;
 
 
+// neighbors structure, defining a list of neighbors
 typedef struct neighbors {
   // the array of neighbors
   neighbor_t neighbor_list[MAX_NEIGHBOR];
@@ -117,7 +119,7 @@ int read_neighbor_config(char *filename, neighbors_t *neighbors);
 int connect_neighbors(neighbors_t *neighbors, int portno);
 
 // find neighbor in neighbors
-int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors); 
+int if_find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors); 
 
 
 #endif

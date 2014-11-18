@@ -42,7 +42,7 @@ int gen_packet(packet_t *packet, char *filename, int type, int TTL){
     strcpy(packet->payload_data, filename);
   }
 
-  return 0;
+  return packet->ID;
 }
 
 
@@ -53,6 +53,7 @@ int gen_packet(packet_t *packet, char *filename, int type, int TTL){
 int init_IDlist(IDlist_t *IDlist){
   IDlist->num = 0;
 }
+
 
 // Add to ID list
 int add_to_IDlist(IDlist_t *IDlist, int ID){
@@ -118,13 +119,8 @@ int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
     return -1;
   }
 
-
-  // find out about neighbor ip
-  // new_sockfd = new_udp_sock(new_ip);
-  
   // push to neighbor struct
   new_neighbor->ip_addr = host_in_addr;
-  // new_neighbor->sockfd = new_sockfd;
 
   return index;
 }
@@ -169,9 +165,9 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
 
 // find neighbor in neighbors
 // param: host_in_addr - bin ip
-//        neighbors 
+//        neighbors - neighbors structure
 // return: 1 on found, 0 on not found
-int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors){
+int if_find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors){
   int i;
 
   for (i = 0; i < neighbors->num_neighbors; ++ i){
@@ -179,5 +175,6 @@ int find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors){
       return 1;
     }
   }
+
   return 0;
 } 

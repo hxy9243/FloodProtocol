@@ -24,15 +24,15 @@
 unsigned long find_host_addr(char *hostname){
   struct hostent *hp;
   struct in_addr **addr_list;
-  unsigned long ipaddr;
+  unsigned long ip_inaddr;
 
   if ( (hp = gethostbyname(hostname)) == NULL ){
     return 0;
   }
   addr_list = (struct in_addr**)hp->h_addr_list;
-  ipaddr = (*addr_list[0]).s_addr;
+  ip_inaddr = (*addr_list[0]).s_addr;
 
-  return ipaddr;
+  return ip_inaddr;
 }
 
 
@@ -48,7 +48,7 @@ char *find_host_ip(unsigned long host_in_addr){
 
 
 // create new udp socket
-// return sockfd
+// return socket fd
 int new_udp_sock(){
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -95,7 +95,7 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int totalsize){
 		      &addrlen);
     allrecved += recved;
 
-    printf("recved %d, all received %d\n", recved, allrecved);
+    printf("[DEBUG] Package recved, size: %d\n", allrecved);
   }
 
   unsigned long bin_ip = remoteaddr.sin_addr.s_addr;
@@ -142,10 +142,11 @@ int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
                       (struct sockaddr *)&servaddr,
                       sizeof(servaddr));
     totalsent += sent;
-    printf ("sent %d, totalsent %d\n", sent, totalsent);
-
   }
 
   close(sockfd);
+
+  printf ("[DEBUG] Packet sent. size: %d\n", totalsent);
+
   return 0;
 }

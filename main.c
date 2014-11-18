@@ -30,8 +30,6 @@ main(int argc, char **argv){
   char Dir[128];
   neighbors_t neighbors;
   pthread_mutex_t lock;
-  
-  printf ("arg number is %d\n", argc);
 
   if (argc < 4){
     ERROR("Usage: ./query_flood PORTNO TTL DIR [NEIGHBOR_HOST, ...]\n");
@@ -41,17 +39,16 @@ main(int argc, char **argv){
     // init neighbors
     init_neighbors(&neighbors);
     int i;
-
-    printf ("After init neighbors\n");
     for (i = 4; i < argc; ++ i){
-      printf("%dth neighbor to push in.\n", i - 3);
-
       // save neighbors to data structure
       unsigned long host_in_addr = find_host_addr(argv[i]);
+
       if (host_in_addr < 0){
-        ERROR("Could not find host\n");
+        ERROR("[DEBUG] Could not find host\n");
       }
       push_neighbor(&neighbors, host_in_addr);
+
+      printf("[INFO] Connection request sent to %s\n", argv[i]);
     }
   }
   portno = atoi(argv[1]);
@@ -78,11 +75,10 @@ main(int argc, char **argv){
   // spawn threads to handle server work 
   pthread_t thread;
   if ( pthread_mutex_init (&lock, NULL) != 0 ){
-    ERROR ("Error creating mutex\n");
+    ERROR ("[DEBUG] Error creating mutex\n");
   }
-
   if ( pthread_create(&thread, NULL, server_worker, (void *)&server_arg) < 0 ){
-    ERROR("Error creating receiver thread\n");
+    ERROR("[DEBUG] Error creating receiver thread\n");
   }
 
   // main thread while loop: sender work 
@@ -90,8 +86,8 @@ main(int argc, char **argv){
     // read input from user
     char input[MAX_STRLEN];
 
-    printf ("Search in network: \n");
-
+    // read input 
+    printf ("[INFO] SEARCH: \n");
     fgets(input, MAX_STRLEN, stdin);
     // strip trailing '\n'
     int len = strlen(input);
@@ -112,11 +108,11 @@ main(int argc, char **argv){
     add_to_IDlist(&IDlist, packetID);
     pthread_mutex_unlock(&lock);
     
-    // send request in UDP to all neighbors
+    // flood request in UDP to all neighbors
     if ( flood_request(&neighbors, portno, &packet, sizeof(packet_t)) < 0 ){
-      ERROR("Error sending request");
+      ERROR("[DEBUG] Error sending request");
     }
   }
 
-
+  return 0;
 }

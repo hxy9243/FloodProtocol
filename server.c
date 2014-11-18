@@ -39,10 +39,10 @@ void *server_worker(void *arg){
   unsigned long client_ipaddr;
 
   if ( udp_bind(sockfd, portno) == -1 ){
-    ERROR("Could not bind to port\n");
+    ERROR("[DEBUG] Could not bind to port\n");
   }
 
-  printf("Successfully bind to port %d\n", portno);
+  printf("[DEBUG] Successfully bind to port %d\n", portno);
 
   // main while loop
   while (1){
@@ -50,13 +50,13 @@ void *server_worker(void *arg){
     client_ipaddr = sock_recvfrom(sockfd, (void *)&packet, sizeof(packet_t));
     unsigned char type = packet.Descript;
 
-    printf("Received new packet: ");
+    printf("[DEBUG] Received new packet: ");
 
     switch(type){
-    case 0: printf("CONNECT\n"); break;
-    case 1: printf("QUERY\n"); break;
-    case 2: printf("RESPON\n"); break;
-    default: printf("WTF?\n"); break;
+    case 0: printf("CONNECT package\n"); break;
+    case 1: printf("QUERY package\n"); break;
+    case 2: printf("RESPON package\n"); break;
+    default: printf("WTF package?\n"); break;
     }
 
     // react accordingly
@@ -114,17 +114,17 @@ int server_handle_connect(neighbors_t *neighbors,
   pthread_mutex_lock(lock);
 
   // update the neighbors
-  if ( !find_neighbor(host_in_addr, neighbors) ){
+  if ( !if_find_neighbor(host_in_addr, neighbors) ){
 
     push_neighbor(neighbors, host_in_addr);
 
-    printf( "New neighbor connecting: %s\n", 
+    printf( "[INFO] New neighbor connecting request. From IP: %s\n", 
             find_host_ip(host_in_addr) );
   }
 
   pthread_mutex_unlock(lock);
 
-  printf("New neighbor connecting!\n");
+  printf("[INFO] New neighbor connected!\n");
   return 0;
 }
 
@@ -162,7 +162,7 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
                0);
     sock_sendto(client_in_addr, portno, &respon_packet, sizeof(packet_t));
 
-    printf ("File %s found, responding to query\n", packet->payload_data);
+    printf("[INFO] File %s found, responding to query.\n", packet->payload_data);
   }
   // not found, flood to neighbors
   else {
@@ -175,7 +175,6 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
     int i;
     int num_neighbors = neighbors->num_neighbors;
     neighbor_t *neighbor_list = neighbors->neighbor_list;
-
     for (i = 0; i < num_neighbors; ++ i){
       unsigned long neighbor_addr = neighbors->neighbor_list[i].ip_addr;
 
@@ -186,8 +185,8 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
 
       // send to this neighbor
       sock_sendto(neighbor_addr, portno, packet, sizeof(packet_t));
-
     } // for
+
   } // else not found, flood to neighbors
 
   return 0;
@@ -200,7 +199,10 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
 int server_handle_respon(packet_t *packet){
 
   // Display info here
-  printf ("File %s found on %s\n", packet->payload_data, packet->hostname);
+  printf("\n[INFO] File %s found on %s, with IP: %s\n\n", 
+         packet->payload_data, 
+         packet->hostname, 
+         find_host_ip(find_host_addr(packet->hostname)) );
           
   return 0;
 }
