@@ -104,6 +104,12 @@ int find_in_IDlist(IDlist_t *IDlist, int ID);
 
 
 /*
+ * Directory related functions
+ */
+// find in directories
+int find_in_dir(char *Dir, char *filename);
+
+/*
  * Neighbor related functions
  */
 // init neighbors

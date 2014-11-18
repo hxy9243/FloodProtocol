@@ -43,8 +43,6 @@ typedef struct server_arg {
 // server thread worker function
 void *server_worker(void *arg);
 
-// find in directories
-int find_in_dir(char *Dir, char *filename);
 
 // handle connect packet
 int server_handle_connect(neighbors_t *neighbors,

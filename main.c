@@ -95,6 +95,13 @@ main(int argc, char **argv){
       input[len - 1] = '\0';
     }
 
+    // first search my own directory
+    if ( find_in_dir(Dir, input) ){
+      printf("[INFO] file %s found locally\n", input);
+
+      continue;
+    }
+      
     // generate packet and add new ID to list
     // use mutex to protect this area
     packet_t packet;

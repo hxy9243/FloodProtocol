@@ -84,6 +84,32 @@ int find_in_IDlist(IDlist_t *IDlist, int ID){
 }
 
 
+
+// read directories
+// param: Dir - the dir to scan
+//        filename - the filename to find
+// return: 1 if hit, 0 if not, -1 if error
+int find_in_dir(char *Dir, char *filename){
+  DIR *dp;
+  struct dirent *dirstruct;
+
+  if ( (dp = opendir(Dir)) == NULL ){
+    return -1;
+  }
+
+  // loop in dir, search for the filename
+  while ( (dirstruct = readdir(dp)) != NULL ){
+    if ( strcmp(filename, dirstruct->d_name) == 0 ){
+      return 1;
+    }
+  }
+
+  closedir(dp);
+  return 0;
+}
+
+
+
 // init neighbor structure
 // param: neighbors - reference to neighbors
 // return: 0 on success -1 on error
