@@ -105,9 +105,9 @@ unsigned long sock_recvfrom(int sockfd, void *buffer, int totalsize){
 
 
 // send to a socket
-// param: ip_addr, buffer, size
+// param: inaddr, buffer, size
 // return: 0 on success -1 on error
-int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
+int sock_sendto(unsigned long host_inaddr, int portno, void *buffer, int size){
   int sockfd;
   struct in_addr in_addr;
   struct hostent *hp;
@@ -115,7 +115,7 @@ int sock_sendto(unsigned long ip_addr, int portno, void *buffer, int size){
   char *ip;
 
   // get dest addr, create sockfd
-  in_addr.s_addr = ip_addr;
+  in_addr.s_addr = host_inaddr;
   ip = inet_ntoa(in_addr);
   if ( (sockfd = socket(AF_INET,
                         SOCK_DGRAM,

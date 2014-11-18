@@ -89,9 +89,6 @@ int find_in_IDlist(IDlist_t *IDlist, int ID){
 // return: 0 on success -1 on error
 int init_neighbors(neighbors_t *neighbors){
   neighbors->num_neighbors = 0;
-
-  printf("Num of neighbors inited to %d\n", neighbors->num_neighbors);
-
   return 0;
 }
 
@@ -106,21 +103,17 @@ int push_neighbor(neighbors_t *neighbors, unsigned long host_in_addr){
   int index = neighbors->num_neighbors;
   int new_sockfd;
   neighbor_t *new_neighbor = &(neighbors->neighbor_list[index]);
-  
-  printf("Num of neighbors was: %d\n", index);
 
   neighbors->num_neighbors = neighbors->num_neighbors+1;
 
-  printf("Num of neighbors is now: %d\n", index);
-
   // TODO: alloc new mem for neighbor instead of dropping
   if (neighbors->num_neighbors >= MAX_NEIGHBOR){
-    WARN("Exceeds max neighbor number\n");
+    WARN("[DEBUG] Exceeds max neighbor number\n");
     return -1;
   }
 
   // push to neighbor struct
-  new_neighbor->ip_addr = host_in_addr;
+  new_neighbor->inaddr = host_in_addr;
 
   return index;
 }
@@ -138,8 +131,6 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
   int num_neighbors = neighbors->num_neighbors;
   neighbor_t *neighbor;
 
-  printf ("%d neighbors to connect\n", num_neighbors);
-
   // send to all neighbors
   for (i = 0; i < num_neighbors; ++i){
 
@@ -151,11 +142,8 @@ int connect_neighbors(neighbors_t *neighbors, int portno){
                
     // send to the neighbor
     neighbor = &neighbors->neighbor_list[i];
-    sock_sendto(neighbor->ip_addr, portno, 
+    sock_sendto(neighbor->inaddr, portno, 
                 (void *)&packet, sizeof(packet));
-
-    printf("Connected to neighbor %s\n",
-	   find_host_ip(neighbor->ip_addr));
 
   }
   
@@ -171,7 +159,7 @@ int if_find_neighbor(unsigned long host_in_addr, neighbors_t *neighbors){
   int i;
 
   for (i = 0; i < neighbors->num_neighbors; ++ i){
-    if (neighbors->neighbor_list[i].ip_addr == host_in_addr){
+    if (neighbors->neighbor_list[i].inaddr == host_in_addr){
       return 1;
     }
   }

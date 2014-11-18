@@ -62,7 +62,7 @@ typedef struct neighbor_addr {
   char hostname[MAX_STRLEN];
 
   // the binary addr, load with inet_ntop
-  unsigned long ip_addr;
+  unsigned long inaddr;
   
   // socket file
   int sockfd;

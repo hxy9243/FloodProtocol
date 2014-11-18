@@ -20,12 +20,12 @@
 int flood_request(neighbors_t *neighbors, int portno, packet_t *packet, int size){
   int i;
   int num_neighbors = neighbors->num_neighbors;
-  unsigned long ip_addr;
+  unsigned long inaddr;
     
   for (i = 0; i < num_neighbors; ++ i){
-    ip_addr = neighbors->neighbor_list[i].ip_addr;
+    inaddr = neighbors->neighbor_list[i].inaddr;
 
-    if (sock_sendto(ip_addr, portno, packet, size) < 0) {
+    if (sock_sendto(inaddr, portno, packet, size) < 0) {
       return -1;
     }
   }

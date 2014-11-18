@@ -148,6 +148,7 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
   // compare ID, ignore if repetitive query
   pthread_mutex_lock(lock);
   if ( find_in_IDlist(IDlist, packet->ID) == 1 ){
+    printf("[INFO] Packet with duplicate ID flooding back. Ignoring\n");
     return 0;
   }
   add_to_IDlist(IDlist, packet->ID);
@@ -176,7 +177,7 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
     int num_neighbors = neighbors->num_neighbors;
     neighbor_t *neighbor_list = neighbors->neighbor_list;
     for (i = 0; i < num_neighbors; ++ i){
-      unsigned long neighbor_addr = neighbors->neighbor_list[i].ip_addr;
+      unsigned long neighbor_addr = neighbors->neighbor_list[i].inaddr;
 
       // filter out the sender, avoid loops
       if (neighbor_addr == client_in_addr){
@@ -185,6 +186,8 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
 
       // send to this neighbor
       sock_sendto(neighbor_addr, portno, packet, sizeof(packet_t));
+
+      printf("[INFO] Not found, flooding to next neighbor IP: %s\n", find_host_ip(neighbor_addr));
     } // for
 
   } // else not found, flood to neighbors
