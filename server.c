@@ -123,10 +123,15 @@ int server_handle_query(server_arg_t *args, packet_t *packet){
 
   // compare ID, ignore if repetitive query
   pthread_mutex_lock(lock);
-  if ( find_in_IDlist(IDlist, packet->ID) == 1 ){
-    printf("[INFO] Packet with duplicate ID flooding back. Ignoring\n");
+  int find_in_id = find_in_IDlist(IDlist, packet->ID);
+  pthread_mutex_unlock(lock);
+
+  if ( find_in_id ){
+    printf("[INFO] Packet with duplicate ID %d flooding back. Ignoring\n", packet->ID);
     return 0;
   }
+
+  pthread_mutex_lock(lock);
   add_to_IDlist(IDlist, packet->ID);
   pthread_mutex_unlock(lock);
 
